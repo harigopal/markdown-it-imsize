@@ -1,14 +1,15 @@
-'use strict';
+"use strict";
 
-
-var p      = require('path');
-var load   = require('markdown-it-testgen').load;
-var assert = require('chai').assert;
+import p from "path";
+import { load } from "markdown-it-testgen";
+import { assert } from "chai";
 
 function normalize(text) {
-  return text.replace(/<blockquote>\n<\/blockquote>/g, '<blockquote></blockquote>');
+  return text.replace(
+    /<blockquote>\n<\/blockquote>/g,
+    "<blockquote></blockquote>"
+  );
 }
-
 
 function generate(path, md) {
   load(path, function (data) {
@@ -18,16 +19,24 @@ function generate(path, md) {
 
     (data.meta.skip ? describe.skip : describe)(desc, function () {
       data.fixtures.forEach(function (fixture) {
-        it(fixture.header ? fixture.header : 'line ' + (fixture.first.range[0] - 1), function () {
-          assert.strictEqual(md.render(fixture.first.text), normalize(fixture.second.text));
-        });
+        it(
+          fixture.header
+            ? fixture.header
+            : "line " + (fixture.first.range[0] - 1),
+          function () {
+            assert.strictEqual(
+              md.render(fixture.first.text),
+              normalize(fixture.second.text)
+            );
+          }
+        );
       });
     });
   });
 }
 
-describe('CommonMark', function () {
-  var md = require('markdown-it')('commonmark').use(require('../'));
+describe("CommonMark", function () {
+  var md = require("markdown-it")("commonmark").use(require("../"));
 
-  generate(p.join(__dirname, 'fixtures/commonmark/good.txt'), md);
+  generate(p.join(__dirname, "fixtures/commonmark/good.txt"), md);
 });
